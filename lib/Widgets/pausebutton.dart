@@ -7,13 +7,12 @@ class PauseButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPlayHandler,
-      child: Icon(
-        Icons.pause,
-        size: 50.0,
-      ),
-    );
+    return IconButton(
+        icon: Icon(Icons.pause),
+        onPressed: onPlayHandler,
+        iconSize: 64.0,
+        color: Colors.white,
+      );
   }
 }
 

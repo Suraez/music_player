@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 class PlayButton extends StatelessWidget {
   Function onPlayHandler;
   PlayButton(this.onPlayHandler);
+  
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onPlayHandler,
-      child: Icon(
-        Icons.play_arrow,
-        size: 50.0,
-      ),
+    return IconButton(
+      icon: Icon(Icons.play_arrow),
+      iconSize: 64.0,
+      onPressed: onPlayHandler,
+      color: Colors.white,
     );
   }
 }

@@ -10,21 +10,27 @@ class Footer extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text(
-            'Developed by',
+            'Made with ',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 16.0,
+              fontSize: 18.0,
+              fontFamily: 'Roboto',
+              fontWeight: FontWeight.w700,
+              fontStyle: FontStyle.italic,
             ),
           ),
           Icon(
-            Icons.person,
+            Icons.favorite,
             color: Colors.white,
           ),
           Text(
-            'Suraj Ojha',
+            ' by Suraj Ojha',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 16.0,
+              fontSize: 18.0,
+              fontFamily: 'Roboto',
+              fontWeight: FontWeight.w700,
+              fontStyle: FontStyle.italic,
             ),
           ),
         ],

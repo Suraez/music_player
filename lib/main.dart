@@ -1,10 +1,14 @@
 import 'package:audioplayers/audio_cache.dart';
 import 'package:flutter/material.dart';
 import 'package:musicplayer/Widgets/footer.dart';
+import 'package:musicplayer/Widgets/nextSongButton.dart';
 import 'package:musicplayer/Widgets/pausebutton.dart';
 import 'package:musicplayer/Widgets/playbutton.dart';
+import 'package:musicplayer/Widgets/prevSongHandler.dart';
 import 'package:musicplayer/Widgets/slider.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:musicplayer/Widgets/songTitle.dart';
+import './songsList.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,28 +20,45 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool playing = false;
-
   AudioPlayer _audioPlayer = AudioPlayer();
   AudioCache cache;
+  // this can handle the state of played music
   AudioPlayerState audioPlayerState = AudioPlayerState.PAUSED;
 
   Duration position = new Duration();
   Duration musicLength = new Duration();
 
+  int currentSongIndex = 0;
+  String path;
   void onPlayHandler() async {
-    String path = 'be.mp3';
-    setState(() async {
-      if (!playing) {
-        await cache.play(path);
-      } else {
-        await _audioPlayer.pause();
+    path = songsList[currentSongIndex]["title"];
+    // print(audioPlayerState);
+    if (audioPlayerState == AudioPlayerState.PAUSED) {
+      await cache.play(path);
+    }
+    if (audioPlayerState == AudioPlayerState.PLAYING) {
+      await _audioPlayer.pause();
+    }
+  }
+
+  void songChangeHandler(String type) async{
+    setState(() {
+      if (type == 'next'){
+      currentSongIndex = (currentSongIndex + 1) % 4;
+      } 
+      if (type == 'prev') {
+        currentSongIndex = (currentSongIndex - 1) % 4;
       }
     });
+    path = songsList[currentSongIndex]["title"];
+    if (audioPlayerState == AudioPlayerState.PLAYING){
+    await cache.play(path);
+    }
   }
 
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
     super.initState();
     cache = AudioCache(fixedPlayer: _audioPlayer);
@@ -50,6 +71,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void dispose() {
+    // ignore: todo
     // TODO: implement dispose
     super.dispose();
     _audioPlayer.release();
@@ -59,6 +81,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    print(currentSongIndex);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -89,14 +112,18 @@ class _MyAppState extends State<MyApp> {
           children: [
             Image.asset('assets/images/sd.png'),
             MySlider(),
+            SongTitle(
+              songsList[currentSongIndex]["title"],
+              songsList[currentSongIndex]["artists"]
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                Icon(Icons.skip_previous_sharp),
+                PrevSongButton(songChangeHandler),
                 audioPlayerState == AudioPlayerState.PAUSED
                     ? PlayButton(onPlayHandler)
                     : PauseButton(onPlayHandler),
-                Icon(Icons.skip_next),
+                NextSongButton(songChangeHandler),
               ],
             ),
           ],
