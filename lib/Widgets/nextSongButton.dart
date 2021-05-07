@@ -23,7 +23,7 @@ class NextSongButton extends StatelessWidget {
       child: IconButton(
         icon: Icon(Icons.skip_next),
         onPressed: () => onNextSongHandler('next'),
-        color: Colors.white,
+        color: Colors.blue[400],
       ),
     );
   }

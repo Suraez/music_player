@@ -5,10 +5,25 @@ class PrevSongButton extends StatelessWidget {
   PrevSongButton(this.onPrevSongHandler);
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      icon: Icon(Icons.skip_previous),
-      onPressed: () => onPrevSongHandler('prev'),
-      color: Colors.white,
+    return Container(
+      height: 50.0,
+      width: 50.0,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            blurRadius: 5.0,
+            spreadRadius: 2.0,
+            color: Colors.blue,
+          ),
+        ],
+      ),
+      child: IconButton(
+        icon: Icon(Icons.skip_previous),
+        onPressed: () => onPrevSongHandler('prev'),
+        color: Colors.blue[400],
+      ),
     );
   }
 }

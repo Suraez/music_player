@@ -30,6 +30,12 @@ class _MyAppState extends State<MyApp> {
 
   int currentSongIndex = 0;
   String path;
+
+  void onSeekHandler(int sec) {
+    Duration newPosition = Duration(seconds: sec);
+    _audioPlayer.seek(newPosition);
+  }
+
   void onPlayHandler() async {
     path = songsList[currentSongIndex]["title"];
     // print(audioPlayerState);
@@ -41,18 +47,18 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  void songChangeHandler(String type) async{
+  void songChangeHandler(String type) async {
     setState(() {
-      if (type == 'next'){
-      currentSongIndex = (currentSongIndex + 1) % 4;
-      } 
+      if (type == 'next') {
+        currentSongIndex = (currentSongIndex + 1) % 4;
+      }
       if (type == 'prev') {
         currentSongIndex = (currentSongIndex - 1) % 4;
       }
     });
     path = songsList[currentSongIndex]["title"];
-    if (audioPlayerState == AudioPlayerState.PLAYING){
-    await cache.play(path);
+    if (audioPlayerState == AudioPlayerState.PLAYING) {
+      await cache.play(path);
     }
   }
 
@@ -65,6 +71,18 @@ class _MyAppState extends State<MyApp> {
     _audioPlayer.onPlayerStateChanged.listen((AudioPlayerState s) {
       setState(() {
         audioPlayerState = s;
+      });
+    });
+
+    _audioPlayer.onDurationChanged.listen((Duration d) {
+      setState(() {
+        musicLength = d;
+      });
+    });
+
+    _audioPlayer.onAudioPositionChanged.listen((Duration p) {
+      setState(() {
+        position = p;
       });
     });
   }
@@ -81,12 +99,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    print(currentSongIndex);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Center(child: Text('My music Player')),
+          title: Center(child: Text('MUSICBYTES')),
         ),
         body: body(),
         bottomNavigationBar: Footer(),
@@ -98,11 +115,11 @@ class _MyAppState extends State<MyApp> {
     return Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomRight,
+            end: Alignment.topLeft,
+            begin: Alignment.bottomCenter,
             colors: [
               Colors.blue[200],
-              Colors.pink[200],
+              Colors.white,
             ],
           ),
         ),
@@ -111,11 +128,13 @@ class _MyAppState extends State<MyApp> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Image.asset('assets/images/sd.png'),
-            MySlider(),
-            SongTitle(
-              songsList[currentSongIndex]["title"],
-              songsList[currentSongIndex]["artists"]
+            MySlider(
+              position,
+              musicLength,
+              onSeekHandler,
             ),
+            SongTitle(songsList[currentSongIndex]["title"],
+                songsList[currentSongIndex]["artists"]),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
